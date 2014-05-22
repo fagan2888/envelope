@@ -24,24 +24,30 @@ y_max = x_range ** 2 / 4 + 100
 
 def subplots():
     "Custom subplots with axes through the origin"
-    fig, ax = plt.subplots()
+    #fig, ax = plt.subplots()
+    #fig = plt.figure(1)
+    fig = plt.figure(figsize=(5,5))
+    ax = SubplotZero(fig, 111)
+    fig.add_subplot(ax)
     
-    # Set the axes through the origin
-    for spine in ['left', 'bottom']:
-        ax.spines[spine].set_position('zero')
-    for spine in ['right', 'top']:
-        #ax.spines[spine].set_color('none')
-        ax.spines[spine].set_visible(False)
+    #ax.axhline(linewidth=1.7, color="k")
+    #ax.axvline(linewidth=1.7, color="k")
     
-    # What's the difference?
-    #ax.set_xticks([])
     plt.xticks([])
-    #ax.set_yticks([])
     plt.yticks([])
     
     # from http://stackoverflow.com/questions/17646247/how-to-make-fuller-axis-arrows-with-matplotlib
-    ax.text(1.01, 0, '$x$', transform=BlendedGenericTransform(ax.transAxes, ax.transData), va='center')
-    ax.text(0, 1.02, '$y$', transform=BlendedGenericTransform(ax.transData, ax.transAxes), ha='center')
+    #ax.text(1.01, 0, '$x$', transform=BlendedGenericTransform(ax.transAxes, ax.transData), va='center')
+    #ax.text(0, 1.02, '$y$', transform=BlendedGenericTransform(ax.transData, ax.transAxes), ha='center')
+    ax.text(1.05, 0, '$x$', transform=BlendedGenericTransform(ax.transAxes, ax.transData), va='center')
+    ax.text(0, 1.06, '$y$', transform=BlendedGenericTransform(ax.transData, ax.transAxes), ha='center')
+    
+    for direction in ["xzero", "yzero"]:
+        ax.axis[direction].set_axisline_style("-|>")
+        ax.axis[direction].set_visible(True)
+    
+    for direction in ["left", "right", "bottom", "top"]:
+        ax.axis[direction].set_visible(False)
     
     return fig, ax
 
@@ -52,7 +58,9 @@ for t in range(-param_range, param_range + 1, param_increment):
     y = func(x, t)
     ax.plot(x, y, 'k-')
 
-plt.ylim([y_min, y_max])
+#plt.ylim(ymin=y_min)
+#plt.ylim([y_min, y_max])
+ax.set_ylim(y_min, y_max)
 
 plt.show()
 #plt.savefig('envelope1.svg', transparent=True, bbox_inches='tight', pad_inches=0)
