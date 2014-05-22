@@ -43,7 +43,7 @@ def subplots():
 fig, ax = subplots()  # Call the local version, not plt.subplots()
 x = np.linspace(-x_range, x_range, x_steps)
 
-for t in range(param_min, param_max + 1, param_increment):
+for t in range(-param_range, param_range + 1, param_increment):
     y = func(x, t)
     ax.plot(x, y, 'k-')
 
