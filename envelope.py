@@ -44,7 +44,7 @@ fig, ax = subplots()  # Call the local version, not plt.subplots()
 x = np.linspace(-x_range, x_range, x_steps)
 
 for t in range(param_min, param_max + 1, param_increment):
-    y = func(x ,t)
+    y = func(x, t)
     ax.plot(x, y, 'k-')
 
 plt.ylim(ymin=y_min)
