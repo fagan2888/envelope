@@ -24,14 +24,14 @@ y_max = x_range ** 2 / 4 + 100
 def subplots():
     "Custom subplots with axes through the origin"
     fig, ax = plt.subplots()
-
+    
     # Set the axes through the origin
     for spine in ['left', 'bottom']:
         ax.spines[spine].set_position('zero')
     for spine in ['right', 'top']:
         #ax.spines[spine].set_color('none')
         ax.spines[spine].set_visible(False)
-             
+    
     # What's the difference?
     #ax.set_xticks([])
     plt.xticks([])
@@ -41,7 +41,7 @@ def subplots():
     # from http://stackoverflow.com/questions/17646247/how-to-make-fuller-axis-arrows-with-matplotlib
     ax.text(1.01, 0, '$x$', transform=BlendedGenericTransform(ax.transAxes, ax.transData), va='center')
     ax.text(0, 1.02, '$y$', transform=BlendedGenericTransform(ax.transData, ax.transAxes), ha='center')
-       
+    
     return fig, ax
 
 fig, ax = subplots()  # Call the local version, not plt.subplots()
@@ -51,7 +51,6 @@ for t in range(-param_range, param_range + 1, param_increment):
     y = func(x, t)
     ax.plot(x, y, 'k-')
 
-#plt.ylim(ymin=y_min)
 plt.ylim([y_min, y_max])
 
 plt.show()
