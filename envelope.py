@@ -10,7 +10,7 @@ x_steps = 200
 param_range = 10
 param_increment = 2
 
-# Function to drawn parameterized by t
+# Function to be drawn parameterized by t
 def func(x, t=1):
     return t * x - t**2
 
@@ -18,7 +18,7 @@ def func(x, t=1):
 y_min = func(x=0, t=param_range) - 10
 
 def subplots():
-    "Custom subplots with axes throught the origin"
+    "Custom subplots with axes through the origin"
     fig, ax = plt.subplots()
 
     # Set the axes through the origin
