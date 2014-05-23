@@ -25,16 +25,16 @@ y_max = x_range ** 2 / 4 + 100
 
 def subplots(x_label='$x$', y_label='$y$'):
     "Custom subplots with axes through the origin"
+    # 'patch.facecolor' defined in matplotlib/rcsetup.py with default 'b' (blue)
+    # The face of arrow heads drawn with 'patch.edgecolor'
+    plt.rcParams['patch.facecolor'] = 'black'
+    
     #fig, ax = plt.subplots()
     fig = plt.figure(1)
     #fig = plt.figure(figsize=(2.5,2.5))
     ax = SubplotZero(fig, 111)
     fig.add_subplot(ax)
 
-    # 'patch.facecolor' defined in matplotlib/rcsetup.py with default 'b' (blue)
-    # The face of arrow heads drawn with 'patch.edgecolor'
-    plt.rc('patch', facecolor='k') # black
-    
     for direction in ["xzero", "yzero"]:
         ax.axis[direction].set_axisline_style("-|>")
         #ax.axis[direction].set_axisline_style("->", size=1.5)
@@ -73,7 +73,7 @@ ax.set_ylim(y_min, y_max)
 #plt.arrow(x_range, 0, 1, 0, color="k", clip_on=False, head_width=0.12, head_length=0.12)
 #plt.arrow(0.003, y_max, 0, 0.1, color="k", clip_on=False, head_width=0.12, head_length=0.12)
 
-#plt.show()
+plt.show()
 #plt.savefig('envelope1.svg', transparent=True, bbox_inches='tight', pad_inches=0)
 #plt.savefig('envelope1.png', transparent=True, bbox_inches='tight', pad_inches=0)
-plt.savefig('envelope1.pdf', bbox_inches='tight', pad_inches=0)
+#plt.savefig('envelope1.pdf', bbox_inches='tight', pad_inches=0)
