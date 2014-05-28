@@ -42,7 +42,11 @@ def subplots(numRows=1, numCols=1, plotNum=1,
     "Custom subplots with axes through the origin"
 
     fig = plt.figure(1)
+<<<<<<< HEAD
     ax = SubplotZero(fig, numRows, numCols, plotNum)
+=======
+    ax = SubplotZero(fig, 111)  # numRows, numCols, plotNum
+>>>>>>> tmp
     fig.add_subplot(ax)
 
     for direction in ["xzero", "yzero"]:
