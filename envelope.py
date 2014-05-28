@@ -63,7 +63,7 @@ def subplots(x_label_pos=[1, 0], y_label_pos=[0, 1], x_label='$x$', y_label='$y$
     return fig, ax
 
 
-fig, ax = subplots(1, 1, 1, x_label_Pos, y_label_Pos)  # Call the local version, not plt.subplots()
+fig, ax = subplots(x_label_Pos, y_label_Pos)  # Call the local version, not plt.subplots()
 x = np.linspace(-x_range, x_range, x_steps)
 
 for n in range(-param_range * param_grid_num_per_unit, param_range * param_grid_num_per_unit + 1):
