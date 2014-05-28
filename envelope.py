@@ -36,17 +36,12 @@ y_min = -x_range**2 / (2*4)
 y_max = x_range**2 / 4 + 1
 
 
-def subplots(numRows=1, numCols=1, plotNum=1,
-             x_label_pos=[1, 0], y_label_pos=[0, 1],
-             x_label='$x$', y_label='$y$'):
+def subplots(x_label_pos=[1, 0], y_label_pos=[0, 1], x_label='$x$', y_label='$y$'):
     "Custom subplots with axes through the origin"
 
     fig = plt.figure(1)
-<<<<<<< HEAD
-    ax = SubplotZero(fig, numRows, numCols, plotNum)
-=======
     ax = SubplotZero(fig, 111)  # numRows, numCols, plotNum
->>>>>>> tmp
+
     fig.add_subplot(ax)
 
     for direction in ["xzero", "yzero"]:
