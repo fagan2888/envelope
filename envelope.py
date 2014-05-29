@@ -4,19 +4,13 @@ from matplotlib.transforms import BlendedGenericTransform
 from mpl_toolkits.axes_grid.axislines import SubplotZero
 import numpy as np
 
-# http://matplotlib.org/users/customizing.html
-plt.rcParams['figure.figsize'] = 2.4, 2.4  # inches: default 8, 6
-plt.rcParams['lines.linewidth'] = 0.5
-plt.rcParams['patch.linewidth'] = 0.5
-# 'patch.facecolor' defined in matplotlib/rcsetup.py with default 'b' (blue)
-# The face of arrow heads drawn with 'patch.facecolor'
-plt.rcParams['patch.facecolor'] = 'black'
-
 
 SAVEFILE = False
 FILNENAME_BASE = 'envelope'
 #FILEFORMATS = ('png', 'svg', 'pdf')
-FILEFORMAT = 'pdf'
+FILEFORMAT = 'png'
+
+MULT_SUBPLOTS = True
 
 # To plt.show()
 FIGNUM = 0
@@ -45,19 +39,26 @@ y_min = -x_max**2 / (2*4)
 y_max = x_max**2 / 4 + 1
 
 
+# http://matplotlib.org/users/customizing.html
+if MULT_SUBPLOTS:
+    WSPACE = 0.5
+    plt.rcParams['figure.figsize'] = \
+        2.4 * len(paramdicts) + WSPACE * (len(paramdicts) - 1), 2.4
+else:
+    plt.rcParams['figure.figsize'] = 2.4, 2.4  # inches: default 8, 6
+plt.rcParams['lines.linewidth'] = 0.5
+plt.rcParams['patch.linewidth'] = 0.5
+# 'patch.facecolor' defined in matplotlib/rcsetup.py with default 'b' (blue)
+# The face of arrow heads drawn with 'patch.facecolor'
+plt.rcParams['patch.facecolor'] = 'black'
+
 # Positions of x, y labels
 x_label_Pos = [1.11, 0]
 y_label_Pos = [0, 1.12]
 
 
-def subplots(x_label_pos=[1, 0], y_label_pos=[0, 1], x_label='$x$', y_label='$y$'):
-    "Custom subplots with axes through the origin"
-
-    fig = plt.figure(1)
-    ax = SubplotZero(fig, 111)  # numRows, numCols, plotNum
-
-    fig.add_subplot(ax)
-
+def customize_axes(ax, x_label_pos=[1, 0], y_label_pos=[0, 1],
+                   x_label='$x$', y_label='$y$'):
     for direction in ["xzero", "yzero"]:
         ax.axis[direction].set_axisline_style("-|>")  # "->" otherwise
         ax.axis[direction].set_visible(True)
@@ -74,15 +75,13 @@ def subplots(x_label_pos=[1, 0], y_label_pos=[0, 1], x_label='$x$', y_label='$y$
     ax.text(y_label_pos[0], y_label_pos[1], y_label,
             transform=BlendedGenericTransform(ax.transData, ax.transAxes), ha='center')
 
-    return fig, ax
+    return ax
 
 
 x = np.array([x_min, x_max])
 
 
-def do_plot(param_max, num_params):
-    fig, ax = subplots(x_label_Pos, y_label_Pos)  # Call the local version, not plt.subplots()
-
+def do_plot(ax, param_max, num_params):
     param_array = np.linspace(-param_max, param_max, num_params)
     for t in param_array:
         y = func(x, t)
@@ -93,12 +92,41 @@ def do_plot(param_max, num_params):
     ax.set_aspect('equal')
 
 
-if SAVEFILE:
+if MULT_SUBPLOTS:
+    fig = plt.figure(1)
+    fig.subplots_adjust(wspace=WSPACE)  # http://matplotlib.org/faq/howto_faq.html
+
+    axes = []
+    for fignum, paramdict in enumerate(paramdicts):
+        # SubplotZero(fig, numRows, numCols, plotNum)
+        axes.append(SubplotZero(fig, 1, len(paramdicts), fignum+1))
+        fig.add_subplot(axes[fignum])
+        axes[fignum] = customize_axes(axes[fignum], x_label_Pos, y_label_Pos)
+        do_plot(axes[fignum], paramdict['param_max'], paramdict['num_params'])
+
+    if SAVEFILE:
+        TRANS = (FILEFORMAT.lower() in ['png', 'svc'])
+        plt.savefig(FILNENAME_BASE + '_mult' + '.' + FILEFORMAT.lower(),
+                    transparent=TRANS, bbox_inches='tight', pad_inches=0)
+    plt.show()
+
+elif SAVEFILE:
     TRANS = (FILEFORMAT.lower() in ['png', 'svc'])
     for fignum, paramdict in enumerate(paramdicts):
-        do_plot(paramdict['param_max'], paramdict['num_params'])
+        fig = plt.figure(1)
+        ax = SubplotZero(fig, 111)
+        fig.add_subplot(ax)
+        ax = customize_axes(ax, x_label_Pos, y_label_Pos)
+
+        do_plot(ax, paramdict['param_max'], paramdict['num_params'])
         plt.savefig(FILNENAME_BASE + str(fignum) + '.' + FILEFORMAT.lower(),
                     transparent=TRANS, bbox_inches='tight', pad_inches=0)
+
 else:
-    do_plot(paramdicts[FIGNUM]['param_max'], paramdicts[FIGNUM]['num_params'])
+    fig = plt.figure(1)
+    ax = SubplotZero(fig, 111)
+    fig.add_subplot(ax)
+    ax = customize_axes(ax, x_label_Pos, y_label_Pos)
+
+    do_plot(ax, paramdicts[FIGNUM]['param_max'], paramdicts[FIGNUM]['num_params'])
     plt.show()
