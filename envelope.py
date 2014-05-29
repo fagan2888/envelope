@@ -13,7 +13,7 @@ plt.rcParams['patch.linewidth'] = 0.5
 plt.rcParams['patch.facecolor'] = 'black'
 
 
-SAVEFILE = True
+SAVEFILE = False
 FILNENAME_BASE = 'envelope'
 #FILEFORMATS = ('png', 'svg', 'pdf')
 FILEFORMAT = 'pdf'
@@ -23,27 +23,26 @@ FIGNUM = 0
 
 
 # Function to be drawn parameterized by t
-def func(x, t=1):
+def func(x, t):
     return t*x - t**2
 
 
-# param = -param_max, -param_max + 1/param_grids_per_unit,
-#         ... , param_max
+# param_array = np.linspace(-param_max, param_max, num_params)
 paramdicts = [
-    {'param_max': 2, 'param_grids_per_unit': 3},
-    {'param_max': 3, 'param_grids_per_unit': 5},
+    {'param_max': 2, 'num_params': 13},
+    {'param_max': 3, 'num_params': 31},
     ]
 #param_max, param_grids_per_unit = 2, 3
 #param_max, param_grids_per_unit = 3, 5
 
 
-# x = np.linspace(-x_range, x_range, x_steps)
-x_range = 5
-x_steps = 200
+# x = np.array([x_min, x_max])
+x_max = 5
+x_min = -x_max
 
 # Lower and upper bounds of the graph
-y_min = -x_range**2 / (2*4)
-y_max = x_range**2 / 4 + 1
+y_min = -x_max**2 / (2*4)
+y_max = x_max**2 / 4 + 1
 
 
 # Positions of x, y labels
@@ -78,14 +77,15 @@ def subplots(x_label_pos=[1, 0], y_label_pos=[0, 1], x_label='$x$', y_label='$y$
     return fig, ax
 
 
-x = np.linspace(-x_range, x_range, x_steps)
+x = np.array([x_min, x_max])
 
 
-def do_plot(param_max, param_grids_per_unit):
+def do_plot(param_max, num_params):
     fig, ax = subplots(x_label_Pos, y_label_Pos)  # Call the local version, not plt.subplots()
 
-    for n in range(-param_max * param_grids_per_unit, param_max * param_grids_per_unit + 1):
-        y = func(x, n / param_grids_per_unit)
+    param_array = np.linspace(-param_max, param_max, num_params)
+    for t in param_array:
+        y = func(x, t)
         ax.plot(x, y, 'k-')
 
     ax.set_ylim(y_min, y_max)
@@ -96,9 +96,9 @@ def do_plot(param_max, param_grids_per_unit):
 if SAVEFILE:
     TRANS = (FILEFORMAT.lower() in ['png', 'svc'])
     for fignum, paramdict in enumerate(paramdicts):
-        do_plot(paramdict['param_max'], paramdict['param_grids_per_unit'])
+        do_plot(paramdict['param_max'], paramdict['num_params'])
         plt.savefig(FILNENAME_BASE + str(fignum) + '.' + FILEFORMAT.lower(),
                     transparent=TRANS, bbox_inches='tight', pad_inches=0)
 else:
-    do_plot(paramdicts[FIGNUM]['param_max'], paramdicts[FIGNUM]['param_grids_per_unit'])
+    do_plot(paramdicts[FIGNUM]['param_max'], paramdicts[FIGNUM]['num_params'])
     plt.show()
