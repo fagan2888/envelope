@@ -13,27 +13,42 @@ plt.rcParams['patch.linewidth'] = 0.5
 plt.rcParams['patch.facecolor'] = 'black'
 
 
-# Positions of x, y labels
-x_label_Pos = [1.11, 0]
-y_label_Pos = [0, 1.12]
+SAVEFILE = True
+FILNENAME_BASE = 'envelope'
+#FILEFORMATS = ('png', 'svg', 'pdf')
+FILEFORMAT = 'pdf'
 
-# x = np.linspace(-x_range, x_range, x_steps)
-x_range = 5
-x_steps = 200
-
-# param = -param_range, -param_range + 1/param_grid_num_per_unit,
-#         ... , param_range
-#param_range, param_grid_num_per_unit = 2, 3
-param_range, param_grid_num_per_unit = 3, 5
+# To plt.show()
+FIGNUM = 0
 
 
 # Function to be drawn parameterized by t
 def func(x, t=1):
     return t*x - t**2
 
+
+# param = -param_max, -param_max + 1/param_grids_per_unit,
+#         ... , param_max
+paramdicts = [
+    {'param_max': 2, 'param_grids_per_unit': 3},
+    {'param_max': 3, 'param_grids_per_unit': 5},
+    ]
+#param_max, param_grids_per_unit = 2, 3
+#param_max, param_grids_per_unit = 3, 5
+
+
+# x = np.linspace(-x_range, x_range, x_steps)
+x_range = 5
+x_steps = 200
+
 # Lower and upper bounds of the graph
 y_min = -x_range**2 / (2*4)
 y_max = x_range**2 / 4 + 1
+
+
+# Positions of x, y labels
+x_label_Pos = [1.11, 0]
+y_label_Pos = [0, 1.12]
 
 
 def subplots(x_label_pos=[1, 0], y_label_pos=[0, 1], x_label='$x$', y_label='$y$'):
@@ -63,18 +78,27 @@ def subplots(x_label_pos=[1, 0], y_label_pos=[0, 1], x_label='$x$', y_label='$y$
     return fig, ax
 
 
-fig, ax = subplots(x_label_Pos, y_label_Pos)  # Call the local version, not plt.subplots()
 x = np.linspace(-x_range, x_range, x_steps)
 
-for n in range(-param_range * param_grid_num_per_unit, param_range * param_grid_num_per_unit + 1):
-    y = func(x, n / param_grid_num_per_unit)
-    ax.plot(x, y, 'k-')
 
-ax.set_ylim(y_min, y_max)
+def do_plot(param_max, param_grids_per_unit):
+    fig, ax = subplots(x_label_Pos, y_label_Pos)  # Call the local version, not plt.subplots()
 
-ax.set_aspect('equal')
+    for n in range(-param_max * param_grids_per_unit, param_max * param_grids_per_unit + 1):
+        y = func(x, n / param_grids_per_unit)
+        ax.plot(x, y, 'k-')
 
-#plt.savefig('envelope1.svg', transparent=True, bbox_inches='tight', pad_inches=0)
-#plt.savefig('envelope1.png', transparent=True, bbox_inches='tight', pad_inches=0)
-#plt.savefig('envelope1.pdf', bbox_inches='tight', pad_inches=0)
-plt.show()
+    ax.set_ylim(y_min, y_max)
+
+    ax.set_aspect('equal')
+
+
+if SAVEFILE:
+    TRANS = (FILEFORMAT.lower() in ['png', 'svc'])
+    for fignum, paramdict in enumerate(paramdicts):
+        do_plot(paramdict['param_max'], paramdict['param_grids_per_unit'])
+        plt.savefig(FILNENAME_BASE + str(fignum) + '.' + FILEFORMAT.lower(),
+                    transparent=TRANS, bbox_inches='tight', pad_inches=0)
+else:
+    do_plot(paramdicts[FIGNUM]['param_max'], paramdicts[FIGNUM]['param_grids_per_unit'])
+    plt.show()
