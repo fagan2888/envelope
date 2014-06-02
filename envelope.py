@@ -109,7 +109,8 @@ if MULT_SUBPLOTS:
         TRANS = (FILEFORMAT.lower() in ['png', 'svc'])
         plt.savefig(FILNENAME_BASE + '_mult' + '.' + FILEFORMAT.lower(),
                     transparent=TRANS, bbox_inches='tight', pad_inches=0)
-    plt.show()
+    else:
+        plt.show()
 
 elif SAVEFILE:
     TRANS = (FILEFORMAT.lower() in ['png', 'svc'])
@@ -122,6 +123,7 @@ elif SAVEFILE:
         do_plot(ax, pvalue_dict['pvalue_max'], pvalue_dict['num_pvalues'])
         plt.savefig(FILNENAME_BASE + str(fignum) + '.' + FILEFORMAT.lower(),
                     transparent=TRANS, bbox_inches='tight', pad_inches=0)
+        plt.close()
 
 else:
     fig = plt.figure(1)
