@@ -42,8 +42,9 @@ y_max = x_max**2 / 4 + 1
 # http://matplotlib.org/users/customizing.html
 if MULT_SUBPLOTS:
     WSPACE = 0.5
+    # Manually adjusted
     plt.rcParams['figure.figsize'] = \
-        2.4 * len(pvalue_dicts) + WSPACE * (len(pvalue_dicts) - 1), 2.4
+        2.4 * len(pvalue_dicts) + WSPACE * len(pvalue_dicts) + 0.2, 2.4
 else:
     plt.rcParams['figure.figsize'] = 2.4, 2.4  # inches: default 8, 6
 plt.rcParams['lines.linewidth'] = 0.5
